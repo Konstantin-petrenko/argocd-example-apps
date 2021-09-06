@@ -14,7 +14,32 @@ spec:
         app: guestbook-ui
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.21
         name: guestbook-ui
         ports:
         - containerPort: 80
+
+
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: chrome-issue
+# spec:
+#   replicas: 1
+#   revisionHistoryLimit: 3
+#   selector:
+#     matchLabels:
+#       app: chrome-issue
+#   template:
+#     metadata:
+#       labels:
+#         app: chrome-issue
+#     spec:
+#       containers:
+#       - image: codefresh/ui-e2e-image
+#         name: chrome-issue
+#         command: ["/bin/sh"]
+#         args: ["-c", "while true; do echo hello; sleep 10;done"]
+#         ports:
+#         - containerPort: 80
