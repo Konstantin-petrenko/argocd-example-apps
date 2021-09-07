@@ -3,7 +3,7 @@ kind: Rollout
 metadata:
   name: rollout-ref-deployment-guestbook
 spec:
-  replicas: 5
+  replicas: 10
   workloadRef:
     apiVersion: apps/v1
     kind: Deployment
