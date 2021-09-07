@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-ref-deployment-guestbook
+spec:
+  # replicas: 1
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: guestbook-ui
+  # namespace: argocd
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
