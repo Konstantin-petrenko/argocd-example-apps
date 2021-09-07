@@ -21,8 +21,8 @@ spec:
         env:
           - name: test
             value: test
-          - name: test2
-            value: test2
+          # - name: test2
+          #   value: test2
 
 
 
