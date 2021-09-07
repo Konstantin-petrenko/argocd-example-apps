@@ -5,8 +5,8 @@ metadata:
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
-    kind: Deployment
-    name: guestbook-ui
+    kind: Rollout
+    name: rollout-ref-deployment-guestbook
   minReplicas: 5
   maxReplicas: 10
   metrics:
