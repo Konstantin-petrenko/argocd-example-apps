@@ -21,6 +21,9 @@ spec:
         env:
           - name: test
             value: test
+        env:
+          - name: test2
+            value: test
         resources:
           requests:
             cpu: 100m
