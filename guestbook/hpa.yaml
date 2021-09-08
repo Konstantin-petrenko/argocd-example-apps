@@ -9,4 +9,9 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     name: rollout-ref-deployment-guestbook
-  targetCPUUtilizationPercentage: 80
+  # targetCPUUtilizationPercentage: 80
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 80
