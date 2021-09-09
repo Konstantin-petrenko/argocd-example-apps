@@ -27,6 +27,8 @@ spec:
             value: test
           - name: test4
             value: test
+          - name: test5
+            value: test
         resources:
           requests:
             cpu: 100m
