@@ -21,10 +21,8 @@ spec:
         env:
           - name: test
             value: test
-        env:
           - name: test2
             value: test
-        env:
           - name: test3
             value: test
         resources:
