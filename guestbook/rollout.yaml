@@ -2,6 +2,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: rollout-ref-deployment-guestbook
+  annotations:
+    notifications.argoproj.io/subscribe.on-rollout-completed.slack: argo-notifications
 spec:
   # replicas: 5
   progressDeadlineAbort: true
