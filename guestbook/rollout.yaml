@@ -5,7 +5,7 @@ metadata:
 spec:
   # replicas: 5
   progressDeadlineSeconds: 40
-  minReadySeconds: 30
+  minReadySeconds: 10
   # progressDeadlineAbort: true
   workloadRef:
     apiVersion: apps/v1
