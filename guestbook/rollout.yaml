@@ -4,6 +4,9 @@ metadata:
   name: rollout-ref-deployment-guestbook
 spec:
   # replicas: 5
+  progressDeadlineSeconds: 10
+  minReadySeconds: 30
+  # progressDeadlineAbort: true
   workloadRef:
     apiVersion: apps/v1
     kind: Deployment
@@ -18,9 +21,6 @@ spec:
         templates:
         # - templateName: random-fail
         - templateName: pass
-  minReadySeconds: 30
-  progressDeadlineSeconds: 10
-  progressDeadlineAbort: true
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: AnalysisTemplate
