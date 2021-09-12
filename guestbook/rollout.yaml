@@ -17,10 +17,10 @@ spec:
       steps:
         - setWeight: 20
         - pause: {duration: 10s}
-      analysis:
-        templates:
-        # - templateName: random-fail
-        - templateName: pass
+      # analysis:
+      #   templates:
+      #   # - templateName: random-fail
+      #   - templateName: pass
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: AnalysisTemplate
