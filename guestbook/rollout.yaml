@@ -18,9 +18,9 @@ spec:
         templates:
         # - templateName: random-fail
         - templateName: pass
-# minReadySeconds: 30
-progressDeadlineSeconds: 10
-progressDeadlineAbort: true
+  minReadySeconds: 30
+  progressDeadlineSeconds: 10
+  progressDeadlineAbort: true
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: AnalysisTemplate
