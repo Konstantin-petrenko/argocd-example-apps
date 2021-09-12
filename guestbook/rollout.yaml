@@ -4,7 +4,10 @@ metadata:
   name: rollout-ref-deployment-guestbook
   annotations:
     notifications.argoproj.io/subscribe.on-rollout-completed.slack: argo-notifications
-    notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: my-channel1;my-channel2
+    notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: argo-notifications
+    notifications.argoproj.io/subscribe.on-rollout-updated.slack: argo-notifications
+    notifications.argoproj.io/subscribe.on-scaling-replica-set.slack: argo-notifications
+    notifications.argoproj.io/subscribe.on-purple.slack: argo-notifications
 spec:
   # replicas: 5
   progressDeadlineAbort: true
