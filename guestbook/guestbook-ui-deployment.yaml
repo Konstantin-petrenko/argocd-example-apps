@@ -31,7 +31,7 @@ spec:
             value: test
           - name: test6
             value: test
-          - name: viasd
+          - name: qsw
             value: test
         resources:
           requests:
