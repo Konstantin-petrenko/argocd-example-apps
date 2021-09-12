@@ -4,9 +4,9 @@ metadata:
   name: rollout-ref-deployment-guestbook
 spec:
   # replicas: 5
+  # progressDeadlineAbort: true
   progressDeadlineSeconds: 40
   minReadySeconds: 10
-  # progressDeadlineAbort: true
   workloadRef:
     apiVersion: apps/v1
     kind: Deployment
