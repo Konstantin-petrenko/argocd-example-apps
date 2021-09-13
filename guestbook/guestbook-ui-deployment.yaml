@@ -14,7 +14,7 @@ spec:
         app: guestbook-ui
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.211
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
         name: guestbook-ui
         ports:
         - containerPort: 80
@@ -31,7 +31,7 @@ spec:
             value: test
           - name: test6
             value: test
-          - name: sadfsdnaaaaaqaa8912qwq2
+          - name: sadfsdnaaaaaqaa8912qwq2121
             value: test
         resources:
           requests:

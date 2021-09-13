@@ -7,11 +7,11 @@ metadata:
     # notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: argo-notifications
     # notifications.argoproj.io/subscribe.on-rollout-updated.slack: argo-notifications
     # notifications.argoproj.io/subscribe.on-scaling-replica-set.slack: argo-notifications
-    notifications.argoproj.io/subscribe.on-purple.telegram: argo-notifications-test
+    # notifications.argoproj.io/subscribe.on-purple.telegram: argo-notifications-test
 spec:
   # replicas: 5
   progressDeadlineAbort: true
-  progressDeadlineSeconds: 120
+  progressDeadlineSeconds: 40
   minReadySeconds: 10
   workloadRef:
     apiVersion: apps/v1
