@@ -18,6 +18,7 @@ spec:
     kind: Deployment
     name: guestbook-ui
   # namespace: argocd
+  revisionHistoryLimit: 3
   strategy:
     canary:
       steps:
