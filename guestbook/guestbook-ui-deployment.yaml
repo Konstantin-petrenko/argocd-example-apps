@@ -31,14 +31,15 @@ spec:
             value: test
           - name: test6
             value: test
-          - name: sadfsdnaaaaaqaa8912qwq2121aaasdqwwasasasadsadasdasdasdas
+          - name: sadfsdnaaaaaqaa8912qwq2121aaasdqwwasasasadsadasdasdADDaasd
             value: test
-        livenessProbe:
-          exec:
-            command:
-            - cd /asdfasdfs
-          initialDelaySeconds: 5
-          periodSeconds: 5
+        # livenessProbe:
+        #   exec:
+        #     command:
+        #     - cat
+        #     - /tmp/healthy
+        #   initialDelaySeconds: 1
+        #   periodSeconds: 5
         # readinessProbe:
         #   tcpSocket:
         #     port: 8080
