@@ -33,11 +33,11 @@ spec:
             value: test
           - name: vizarwe
             value: test
-        # livenessProbe:
-        #   tcpSocket:
-        #     port: 8080
-        #   initialDelaySeconds: 1
-        #   periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 1
+          periodSeconds: 10
         # readinessProbe:
         #   tcpSocket:
         #     port: 8080
