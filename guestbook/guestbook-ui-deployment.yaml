@@ -31,7 +31,7 @@ spec:
             value: test
           - name: test6
             value: test
-          - name: vizarwe
+          - name: vizarweasd
             value: test
         # livenessProbe:
         #   tcpSocket:
