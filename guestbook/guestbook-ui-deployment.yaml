@@ -34,12 +34,10 @@ spec:
           - name: vizarwe
             value: test
         livenessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/healthy
+          tcpSocket:
+            port: 8080
           initialDelaySeconds: 1
-          periodSeconds: 5
+          periodSeconds: 10
         # readinessProbe:
         #   tcpSocket:
         #     port: 8080
