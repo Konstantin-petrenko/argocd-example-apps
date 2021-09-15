@@ -36,8 +36,7 @@ spec:
         livenessProbe:
           exec:
             command:
-            - cat
-            - /tmp/healthy
+            - cd /asdfasdfs
           initialDelaySeconds: 5
           periodSeconds: 5
         # readinessProbe:
