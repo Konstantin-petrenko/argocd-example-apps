@@ -31,7 +31,7 @@ spec:
             value: test
           - name: test6
             value: test
-          - name: sadfsdnaaaaaqaa8912qwq2121aaasdqww
+          - name: sadfsdnaaaaaqaa8912qwq2121aaasdqwwasas
             value: test
         resources:
           requests:
