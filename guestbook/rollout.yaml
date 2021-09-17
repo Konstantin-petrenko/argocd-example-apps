@@ -10,7 +10,7 @@ metadata:
     # notifications.argoproj.io/subscribe.on-purple.telegram: argo-notifications-test
 spec:
   # replicas: 5
-  # progressDeadlineAbort: true
+  progressDeadlineAbort: true
   progressDeadlineSeconds: 120
   minReadySeconds: 10
   workloadRef:
