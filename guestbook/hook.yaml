@@ -12,7 +12,7 @@ spec:
       - name: hello-world
         image: curlimages/curl
         command:
-          - "sleep"
+          - "echo"
           - "hello world"
       restartPolicy: Never
   backoffLimit: 2
