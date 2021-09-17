@@ -31,18 +31,18 @@ spec:
             value: test
           - name: test6
             value: test
-          - name: vizarweasdasasdasd
+          - name: vizarweasdasasdasdasdf
             value: test
         # livenessProbe:
         #   tcpSocket:
         #     port: 8080
         #   initialDelaySeconds: 1
         #   periodSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        # readinessProbe:
+        #   tcpSocket:
+        #     port: 8080
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
         resources:
           requests:
             cpu: 100m
