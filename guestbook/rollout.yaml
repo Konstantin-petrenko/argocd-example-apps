@@ -28,6 +28,17 @@ spec:
       #   templates:
       #   # - templateName: random-fail
       #   - templateName: pass
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ui-2
+  # namespace: argocd
+  revisionHistoryLimit: 3
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {duration: 10s}
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: AnalysisTemplate
