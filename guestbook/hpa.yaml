@@ -8,7 +8,7 @@ spec:
   scaleTargetRef:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
-    name: rollout-ref-deployment-guestbook
+    name: deployment-guestbook
   # targetCPUUtilizationPercentage: 80
   metrics:
   - type: Resource
