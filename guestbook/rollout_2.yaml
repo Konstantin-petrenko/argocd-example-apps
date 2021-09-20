@@ -5,7 +5,7 @@ metadata:
   annotations:
 spec:
   progressDeadlineAbort: true
-  progressDeadlineSeconds: 30
+  progressDeadlineSeconds: 50
   minReadySeconds: 10
   workloadRef:
     apiVersion: apps/v1
