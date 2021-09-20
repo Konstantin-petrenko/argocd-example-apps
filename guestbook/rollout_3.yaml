@@ -23,7 +23,7 @@ spec:
         ports:
         - containerPort: 80
         env:
-          - name: test1
+          - name: version2
             value: test
         # livenessProbe:
         #   tcpSocket:
