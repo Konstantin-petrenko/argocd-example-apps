@@ -55,7 +55,7 @@ spec:
         app: ui-2
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2199
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
         name: ui-2
         ports:
         - containerPort: 80
