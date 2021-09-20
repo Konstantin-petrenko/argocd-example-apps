@@ -2,7 +2,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: deployment-ui-2
-  annotations:
 spec:
   progressDeadlineAbort: true
   progressDeadlineSeconds: 50
