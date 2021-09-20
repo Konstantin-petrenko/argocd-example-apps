@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 80
         env:
-          - name: vizarweasdasasdasdasdfasdssasasasdasd
+          - name: qwertkl
             value: test
         # livenessProbe:
         #   tcpSocket:
@@ -55,12 +55,12 @@ spec:
         app: ui-2
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2199
         name: ui-2
         ports:
         - containerPort: 80
         env:
-          - name: asdfaasdasd
+          - name: asdfaasdasdasds
             value: test
         # livenessProbe:
         #   tcpSocket:
