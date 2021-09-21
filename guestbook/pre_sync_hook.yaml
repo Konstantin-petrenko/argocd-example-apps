@@ -26,7 +26,7 @@ kind: WorkflowTemplate
 metadata:
   creationTimestamp: null
   name: clone_git_pre_sync
-  namespace: codefresh-v2
+  # namespace: codefresh-v2
   annotations:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
