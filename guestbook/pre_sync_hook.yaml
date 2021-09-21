@@ -52,7 +52,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Workflow
 metadata:
   name: clone-git-pre-sync
-  # namespace: codefresh-v2
+  namespace: codefresh-v2
   annotations:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
