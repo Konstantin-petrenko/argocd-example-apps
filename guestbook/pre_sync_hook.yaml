@@ -1,0 +1,48 @@
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: clone_git_pre_sync
+#   annotations:
+#     argocd.argoproj.io/hook: PreSync
+#     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: hello-world
+#         image: curlimages/curl
+#         command:
+#           - "echo"
+#           - "hello world"
+#         env:
+#           - name: gihub_token
+#             value: test
+#       restartPolicy: Never
+#   backoffLimit: 1
+
+
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  creationTimestamp: null
+  name: clone_git_pre_sync
+  namespace: codefresh-v2
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  arguments: {}
+  entrypoint: whalesay
+  templates:
+  - container:
+      args:
+      - Hello World
+      command:
+      - cowsay
+      image: docker/whalesay
+      name: ""
+      resources: {}
+    inputs: {}
+    metadata: {}
+    name: whalesay
+    outputs: {}
