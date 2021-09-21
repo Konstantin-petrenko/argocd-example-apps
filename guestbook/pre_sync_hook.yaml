@@ -24,7 +24,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
-  creationTimestamp: null
+  # creationTimestamp: null
   name: clone_git_pre_sync
   # namespace: codefresh-v2
   annotations:
