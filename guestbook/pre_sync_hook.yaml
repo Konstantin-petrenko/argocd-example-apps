@@ -11,9 +11,9 @@
 #       containers:
 #       - name: hello-world
 #         image: curlimages/curl
-#         command:
-#           - "echo"
-#           - "hello world"
+        # command:
+        #   - "echo"
+        #   - "hello world"
 #         env:
 #           - name: gihub_token
 #             value: test
@@ -61,6 +61,6 @@ spec:
   templates:
   - name: whalesay            # Defining the "whalesay" template
     container:
-      image: docker/whalesay
-      command: [cowsay]
+      image: curlimages/curl
+      command: [echo]
       args: ["hello world"]
