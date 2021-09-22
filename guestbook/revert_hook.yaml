@@ -55,6 +55,8 @@ data:
           git commit -m "revert to stablle commit $stable_commit"
           git push
 
+          git revert 33be7ee8659789333902173be1584706de1f280f..HEAD --strategy=recursive --strategy-option=theirs -n
+
 
 #2
 # cd argocd-example-apps
