@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: revert
+  namespace: guestbook
+  annotations:
+    argocd.argoproj.io/hook: SyncFail
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      containers:
+      - name: revert
+        image: bitnami/git
+        command: [ "/bin/bash" ]
+        args:
+          - "-c"
+          - bash /tmp/scripts/revert.sh
+        env:
+          - name: token
+            valueFrom:
+              secretKeyRef:
+                name: github-token
+                key: github-token
+        volumeMounts:
+          - name: git-repo-source
+            mountPath: "/tmp/source"
+          - name: revert
+            mountPath: /tmp/scripts
+      volumes:
+      - name: git-repo-source
+        persistentVolumeClaim:
+          claimName: git-repo-source
+      - name: revert
+        configMap:
+          name: revert
+      restartPolicy: Never
+  backoffLimit: 1
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: revert
+  namespace: guestbook
+data:
+  revert.sh: |-
+          #sleep 3000
+          cd /tmp/source/argocd-example-apps
+          git pull
+          git config --global user.name "auto revert"
+          git config --global user.email autorevert@example.com
+          export stable_commit=$(cat /tmp/source/stable_commit)
+          git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+          git add .
+          git commit -m "revert to stablle commit $stable_commit"
+          git push
+
+
+#2
+# cd argocd-example-apps
+#
+# stable_commit=$(git show HEAD~1 | grep commit | awk '{print $2}')
+# echo $stable_commit
+#
+# git pull
+#
+# git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+# git add .
+# git commit -m "revert to stablle commit $stable_commit"
+# git push

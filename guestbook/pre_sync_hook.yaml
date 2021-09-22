@@ -12,18 +12,20 @@ spec:
       containers:
       - name: git-clone
         image: bitnami/git
-        command:
-          - "sleep"
-          - "3600"
+        # command: [ "/bin/bash", "-c" , "sleep 3600" ]
+        command: [ "/bin/bash" ]
+        args:
+          - "-c"
+          - cd /tmp/source && rm -rf argocd-example-apps && git clone https://"$token"@github.com/Konstantin-petrenko/argocd-example-apps.git && ls -la && cd argocd-example-apps && git show HEAD~1 | grep commit | awk '{print $2}' > /tmp/source/stable_commit
         env:
-          - name: gihub-token
+          - name: token
             valueFrom:
               secretKeyRef:
-                key: github-token
                 name: github-token
+                key: github-token
         volumeMounts:
-        - name: git-repo-source
-          mountPath: "/tmp/source"
+          - name: git-repo-source
+            mountPath: "/tmp/source"
       volumes:
       - name: git-repo-source
         persistentVolumeClaim:
@@ -31,7 +33,19 @@ spec:
       restartPolicy: Never
   backoffLimit: 1
 
-
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: pi
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: pi
+#         image: perl
+#         command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+#       restartPolicy: Never
+#   backoffLimit: 4
 
 # apiVersion: argoproj.io/v1alpha1
 # kind: WorkflowTemplate
