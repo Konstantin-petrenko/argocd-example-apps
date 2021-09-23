@@ -11,7 +11,8 @@ spec:
     spec:
       containers:
       - name: revert
-        image: bitnami/git
+        # image: bitnami/git
+        image: kpetrenko/codefresh:git-argo-rollouts
         command: [ "/bin/bash" ]
         args:
           - "-c"
@@ -44,18 +45,34 @@ metadata:
   namespace: guestbook
 data:
   revert.sh: |-
-          #sleep 3000
-          cd /tmp/source/argocd-example-apps
-          git pull
-          git config --global user.name "auto revert"
-          git config --global user.email autorevert@example.com
-          export stable_commit=$(cat /tmp/source/stable_commit)
-          git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
-          git add .
-          git commit -m "revert to stablle commit $stable_commit"
-          git push
+          # !/usr/bin/env bash
+          set -o xtrace # uncomment it if you want deeper output
+          set -o errexit
+          set -o pipefail
+          : '
+          This script does : 1. get stable commit
+                             2. pull and revert not stable commits if sync of argo applications is not succeded
+                             3. push to git
+          '
+          if [[ $(kubectl-argo-rollouts list rollouts -n guestbook | grep Degraded) ]]; then
+            echo one of rollouts is in degreaded state roll back to stable version
+             cd /tmp/source/argocd-example-apps
+             git pull
+             git config --global user.name "auto revert"
+             git config --global user.email autorevert@example.com
+             export stable_commit=$(cat /tmp/source/stable_commit)
+             git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+             git add .
+             git commit -m "revert to stablle commit $stable_commit"
+             git push
+          else
+             echo something is wrong with not rolluts please check
+          fi
 
-          git revert 33be7ee8659789333902173be1584706de1f280f..HEAD --strategy=recursive --strategy-option=theirs -n
+
+
+
+# git revert 33be7ee8659789333902173be1584706de1f280f..HEAD --strategy=recursive --strategy-option=theirs -n
 
 
 #2
