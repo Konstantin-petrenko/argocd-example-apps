@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 80
         env:
-          - name: test1sd
+          - name: test1sdasd
             value: test
         # livenessProbe:
         #   tcpSocket:
