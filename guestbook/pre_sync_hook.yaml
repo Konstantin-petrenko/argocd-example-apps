@@ -16,7 +16,7 @@ spec:
         command: [ "/bin/bash" ]
         args:
           - "-c"
-          - cd /tmp/source && rm -rf argocd-example-apps && git clone https://"$token"@github.com/Konstantin-petrenko/argocd-example-apps.git && ls -la && cd argocd-example-apps && git show HEAD~1 | grep commit | awk '{print $2}' > /tmp/source/stable_commit
+          - cd /tmp/source && set -o xtrace && rm -rf argocd-example-apps && git clone https://"$token"@github.com/Konstantin-petrenko/argocd-example-apps.git && ls -la && cd argocd-example-apps && git show HEAD~1 | grep commit | awk '{print $2}' > /tmp/source/stable_commit
         env:
           - name: token
             valueFrom:
