@@ -14,7 +14,7 @@ spec:
         app: guestbook-ui
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.1
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
         name: guestbook-ui
         ports:
         - containerPort: 80
@@ -30,7 +30,7 @@ spec:
         #   tcpSocket:
         #     port: 8080
         #   initialDelaySeconds: 5
-        #   periodSeconds: 10
+        #   periodSeconds: 101
         resources:
           requests:
             cpu: 100m
