@@ -4,7 +4,7 @@ metadata:
   name: roll-ui-3
 spec:
   # progressDeadlineAbort: true
-  progressDeadlineSeconds: 50
+  progressDeadlineSeconds: 70
   minReadySeconds: 10
 
   replicas: 5

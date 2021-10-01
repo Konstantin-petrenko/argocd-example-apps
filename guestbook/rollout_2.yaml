@@ -4,7 +4,7 @@ metadata:
   name: deployment-ui-2
 spec:
   progressDeadlineAbort: true
-  progressDeadlineSeconds: 50
+  progressDeadlineSeconds: 70
   minReadySeconds: 10
   workloadRef:
     apiVersion: apps/v1
