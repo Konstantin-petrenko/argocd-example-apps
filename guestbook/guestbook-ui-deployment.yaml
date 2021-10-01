@@ -20,7 +20,7 @@ spec:
         - containerPort: 80
         env:
           - name: test1sdasd
-            value: test
+            value: testasdasd
         # livenessProbe:
         #   tcpSocket:
         #     port: 8080
@@ -61,7 +61,7 @@ spec:
         - containerPort: 80
         env:
           - name: version2
-            value: test
+            value: testasdasd
         # livenessProbe:
         #   tcpSocket:
         #     port: 8080
