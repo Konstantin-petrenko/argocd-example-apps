@@ -63,7 +63,7 @@ data:
              export stable_commit=$(cat /tmp/source/stable_commit)
              git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
              git add .
-             git commit -m "revert to stablle commit $stable_commit"
+             git commit -m "revert to stable commit $stable_commit"
              git push
           else
              echo something is wrong with not rolluts please check
