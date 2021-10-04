@@ -19,7 +19,7 @@ spec:
         ports:
         - containerPort: 80
         env:
-          - name: test1sdasdsdsdasdfaas
+          - name: test1sdasdsdsdasdfaasasd
             value: testasdasd
         livenessProbe:
           tcpSocket:
@@ -28,7 +28,7 @@ spec:
           periodSeconds: 10
         readinessProbe:
           tcpSocket:
-            port: 80
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 10
         resources:
