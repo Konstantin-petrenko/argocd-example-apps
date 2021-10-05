@@ -1,42 +1,42 @@
-# apiVersion: batch/v1
-# kind: Job
-# metadata:
-#   name: clone-git-pre-sync
-#   namespace: guestbook
-#   annotations:
-#     argocd.argoproj.io/hook: PreSync
-#     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
-# spec:
-#   template:
-#     spec:
-#       containers:
-#       - name: git-clone
-#         image: bitnami/git
-#         # command: [ "/bin/bash", "-c" , "sleep 3600" ]
-#         command: [ "/bin/bash" ]
-#         args:
-#           - "-c"
-#           - bash /tmp/clone/clone.sh
-#         env:
-#           - name: token
-#             valueFrom:
-#               secretKeyRef:
-#                 name: github-token
-#                 key: github-token
-#         volumeMounts:
-#           - name: git-repo-source
-#             mountPath: "/tmp/source"
-#           - name: clone
-#             mountPath: /tmp/clone
-#       volumes:
-#       - name: git-repo-source
-#         persistentVolumeClaim:
-#           claimName: git-repo-source
-#       - name: clone
-#         configMap:
-#           name: clone
-#       restartPolicy: Never
-#   backoffLimit: 1
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clone-git-pre-sync
+  namespace: guestbook
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      containers:
+      - name: git-clone
+        image: bitnami/git
+        # command: [ "/bin/bash", "-c" , "sleep 3600" ]
+        command: [ "/bin/bash" ]
+        args:
+          - "-c"
+          - bash /tmp/clone/clone.sh
+        env:
+          - name: token
+            valueFrom:
+              secretKeyRef:
+                name: github-token
+                key: github-token
+        volumeMounts:
+          - name: git-repo-source
+            mountPath: "/tmp/source"
+          - name: clone
+            mountPath: /tmp/clone
+      volumes:
+      - name: git-repo-source
+        persistentVolumeClaim:
+          claimName: git-repo-source
+      - name: clone
+        configMap:
+          name: clone
+      restartPolicy: Never
+  backoffLimit: 1
 ---
 kind: ConfigMap
 apiVersion: v1
