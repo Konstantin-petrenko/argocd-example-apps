@@ -4,7 +4,7 @@ metadata:
   name: roll-ui-3
 spec:
   # progressDeadlineAbort: true
-  progressDeadlineSeconds: 70
+  progressDeadlineSeconds: 40
   minReadySeconds: 10
 
   replicas: 2
@@ -23,7 +23,7 @@ spec:
         ports:
         - containerPort: 80
         env:
-          - name: version2
+          - name: version2asd
             value: test
         # livenessProbe:
         #   tcpSocket:
