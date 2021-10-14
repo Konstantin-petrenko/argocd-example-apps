@@ -3,7 +3,7 @@ kind: Rollout
 metadata:
   name: roll-ui-3
 spec:
-  # progressDeadlineAbort: true
+  progressDeadlineAbort: true
   progressDeadlineSeconds: 40
   minReadySeconds: 10
 
