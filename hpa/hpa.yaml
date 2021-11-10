@@ -1,17 +1,38 @@
-apiVersion: autoscaling/v2beta1
+# # apiVersion: autoscaling/v2beta1
+# apiVersion: autoscaling/v2beta2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: hpa-rollout-1-guestbook
+# spec:
+#   maxReplicas: 3
+#   minReplicas: 1
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: guestbook-ui
+#   # targetCPUUtilizationPercentage: 80
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       targetAverageUtilization: 80
+
+
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: hpa-rollout-1-guestbook
+  name: guestbook-ui
 spec:
-  maxReplicas: 3
-  minReplicas: 1
+  maxReplicas: 50
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 50
+          type: Utilization
+      type: Resource
+  minReplicas: 2
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: guestbook-ui
-  # targetCPUUtilizationPercentage: 80
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80

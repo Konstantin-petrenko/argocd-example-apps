@@ -1,17 +1,37 @@
-apiVersion: autoscaling/v2beta1
+# # apiVersion: autoscaling/v2beta1
+# apiVersion: autoscaling/v2beta2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: hpa-rollout-2-ui
+# spec:
+#   maxReplicas: 10
+#   minReplicas: 5
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: ui-2
+#   # targetCPUUtilizationPercentage: 80
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       targetAverageUtilization: 80
+
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: hpa-rollout-2-ui
+  name: ui-2
 spec:
-  maxReplicas: 10
-  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 50
+          type: Utilization
+      type: Resource
+  minReplicas: 2
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: ui-2
-  # targetCPUUtilizationPercentage: 80
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
