@@ -17,19 +17,49 @@
 #       name: cpu
 #       targetAverageUtilization: 80
 
-apiVersion: autoscaling/v2beta2
+# apiVersion: autoscaling/v2beta2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: ui-2
+# spec:
+#   maxReplicas: 3
+#   metrics:
+#     - resource:
+#         name: cpu
+#         target:
+#           averageUtilization: 50
+#           type: Utilization
+#       type: Resource
+#   minReplicas: 2
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: ui-2
+
+
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: ui-2
 spec:
   maxReplicas: 3
   metrics:
-    - resource:
-        name: cpu
+    - object:
+        metricName: cpu_usage_avg
         target:
-          averageUtilization: 50
-          type: Utilization
-      type: Resource
+          apiVersion: apps/v1
+          kind: Deployment
+          name: ui-2
+        targetValue: 1
+      type: Object
+    - object:
+        metricName: memory_working_set_bytes_avg
+        target:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: ui-2
+        targetValue: 1G
+      type: Object
   minReplicas: 2
   scaleTargetRef:
     apiVersion: apps/v1
