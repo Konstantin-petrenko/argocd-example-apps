@@ -17,7 +17,7 @@
 #       name: cpu
 #       targetAverageUtilization: 80
 
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: ui-2
