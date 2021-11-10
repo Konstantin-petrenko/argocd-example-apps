@@ -55,23 +55,23 @@ spec:
         app: ui-2
     spec:
       containers:
-      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.1
         name: ui-2
         ports:
         - containerPort: 80
         env:
           - name: version2
             value: testasdasdasdasdasdfasdasdasdf
-        livenessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 20
-          periodSeconds: 10
-        readinessProbe:
-          tcpSocket:
-            port: 80
-          initialDelaySeconds: 20
-          periodSeconds: 10
+        # livenessProbe:
+        #   tcpSocket:
+        #     port: 80
+        #   initialDelaySeconds: 20
+        #   periodSeconds: 10
+        # readinessProbe:
+        #   tcpSocket:
+        #     port: 80
+        #   initialDelaySeconds: 20
+        #   periodSeconds: 10
         # livenessProbe:
         #   tcpSocket:
         #     port: 8080
