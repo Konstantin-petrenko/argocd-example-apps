@@ -17,12 +17,12 @@
 #       name: cpu
 #       targetAverageUtilization: 80
 
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: ui-2
 spec:
-  maxReplicas: 50
+  maxReplicas: 3
   metrics:
     - resource:
         name: cpu

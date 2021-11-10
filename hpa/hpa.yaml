@@ -18,12 +18,12 @@
 #       targetAverageUtilization: 80
 
 
-apiVersion: autoscaling/v2beta2
+apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: guestbook-ui
 spec:
-  maxReplicas: 50
+  maxReplicas: 3
   metrics:
     - resource:
         name: cpu
