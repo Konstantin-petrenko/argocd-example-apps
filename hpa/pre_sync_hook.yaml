@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clone-git-pre-sync
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      containers:
+      - name: git-clone
+        image: bitnami/git
+        # command: [ "/bin/bash", "-c" , "sleep 3600" ]
+        command: [ "/bin/bash" ]
+        args:
+          - "-c"
+          - sleep 3600
+        # env:
+        #   - name: token
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: github-token
+        #         key: github-token
+        volumeMounts:
+          - name: git-repo-source
+            mountPath: "/tmp/source"
+          - name: clone
+            mountPath: /tmp/clone
+      volumes:
+      - name: git-repo-source
+        persistentVolumeClaim:
+          claimName: git-repo-source
+      - name: clone
+        configMap:
+          name: clone
+      restartPolicy: Never
+  backoffLimit: 1
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: clone
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+data:
+  clone.sh: |-
+          # !/usr/bin/env bash
+          set -o xtrace # uncomment it if you want deeper output
+          set -o errexit
+          set -o pipefail
+          : '
+          This script does : 1. get stable commit
+                             2. pull and revert not stable commits if sync of argo applications is not succeded
+                             3. push to git
+          '
+          cd /tmp/source
+          rm -rf argocd-example-apps
+          git clone https://"$token"@github.com/Konstantin-petrenko/argocd-example-apps.git
+          ls -la
+          cd argocd-example-apps
+          echo we will take a stable commit to make a revert if we will get an error
+          git show HEAD~1 | grep commit -m1 | awk '{print $2}' > /tmp/source/stable_commit
+          cat /tmp/source/stable_commit
+          # if [[ $(git show HEAD~1 | grep "revert to stable commit" -m1) ]]; then
+          #     echo we are in lopp > /tmp/source/stable_commit
+          # else
+          #     echo we will take a stable commit to make a revert if we will get an error
+          #     git show HEAD~1 | grep commit -m1 | awk '{print $2}' > /tmp/source/stable_commit
+          #     cat /tmp/source/stable_commit
+          # fi
