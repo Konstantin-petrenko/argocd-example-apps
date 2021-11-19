@@ -23,14 +23,14 @@ spec:
         #         name: github-token
         #         key: github-token
         volumeMounts:
-          - name: git-repo-source
-            mountPath: "/tmp/source"
+          # - name: git-repo-source
+          #   mountPath: "/tmp/source"
           - name: clone
             mountPath: /tmp/clone
       volumes:
-      - name: git-repo-source
-        persistentVolumeClaim:
-          claimName: git-repo-source
+      # - name: git-repo-source
+      #   persistentVolumeClaim:
+      #     claimName: git-repo-source
       - name: clone
         configMap:
           name: clone
