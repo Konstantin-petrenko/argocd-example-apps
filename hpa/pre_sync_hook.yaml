@@ -46,7 +46,7 @@ metadata:
 data:
   clone.sh: |-
           # !/usr/bin/env bash
-          set -o xtrace # uncomment it if you want deeper output
+          set -o xtrace # uncomment it if you want deeper output test
           set -o errexit
           set -o pipefail
           : '
