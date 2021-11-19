@@ -58,7 +58,7 @@ spec:
           apiVersion: apps/v1
           kind: Deployment
           name: ui-2
-        targetValue: 1G
+        targetValue: 2G
       type: Object
   minReplicas: 2
   scaleTargetRef:
