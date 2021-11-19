@@ -4,7 +4,7 @@ metadata:
   name: clone-git-pre-sync-2
   annotations:
     argocd.argoproj.io/hook: PreSync
-    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
     argocd.argoproj.io/sync-wave: "-1"
 spec:
   template:
@@ -26,10 +26,15 @@ spec:
         volumeMounts:
           - name: clone-2
             mountPath: /tmp/clone
+          - name: git-repo-source
+            mountPath: "/tmp/source"
       volumes:
       - name: clone-2
         configMap:
           name: clone-2
+      - name: git-repo-source
+        persistentVolumeClaim:
+          claimName: git-repo-source
       restartPolicy: Never
   backoffLimit: 1
 ---

@@ -4,6 +4,7 @@ metadata:
   name: git-repo-source
   annotations:
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   storageClassName: gp2
   accessModes:
