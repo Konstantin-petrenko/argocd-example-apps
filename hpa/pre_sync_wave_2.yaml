@@ -16,7 +16,7 @@ spec:
         command: [ "/bin/bash" ]
         args:
           - "-c"
-          - sleep 5
+          - sleep 10000
         # env:
         #   - name: token
         #     valueFrom:
