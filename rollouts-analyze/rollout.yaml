@@ -1,0 +1,95 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: argo-platform-api-events
+  labels:
+    app: argo-platform-api-events
+    release: release-name
+    heritage: Helm
+spec:
+  progressDeadlineAbort: true
+  progressDeadlineSeconds: 500
+  revisionHistoryLimit: 4
+  strategy:
+    canary:
+      # analysis:
+      #   templates:
+      #   - templateName: success-rate
+      #   startingStep: 2
+      #   args:
+      #   - name: application-name
+      #     value: api-events
+      steps:
+        - setWeight: 30
+        - pause: {duration: 10s}
+        - analysis:
+            templates:
+            - templateName: success-rate
+            args:
+            - name: application-name
+              value: 'api-events'
+        - setWeight: 60
+        - pause: {duration: 10s}
+        - setWeight: 90
+        - pause: {duration: 10s}
+  replicas: 5
+  selector:
+    matchLabels:
+      app: argo-platform-api-events
+      release: release-name
+  template:
+    metadata:
+      labels:
+        app: argo-platform-api-events
+        release: release-name
+    spec:
+      imagePullSecrets:
+        - name: "release-name-registry"
+      containers:
+        - name: api-events
+          image: ubuntu
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: ENV
+              value: "production"
+            - name: VER
+              value: "1"
+            - name: NEW_RELIC_APP_NAME
+              value: "api-events"
+            - name: RABBITMQ_URLS
+              value: "amqps://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST):$(RABBITMQ_PORT)"
+          ports:
+            - name: http
+              protocol: TCP
+              containerPort: 80
+          # livenessProbe:
+          #   timeoutSeconds: 3
+          #   initialDelaySeconds: 60
+          #   httpGet:
+          #     path: /2.0/api/events/ping
+          #     port: http
+          # readinessProbe:
+          #   timeoutSeconds: 3
+          #   initialDelaySeconds: 60
+          #   httpGet:
+          #     path: /2.0/api/events/ping
+          #     port: http
+          resources: 
+            limits:
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      affinity: 
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                - app
+      tolerations: 
+        - effect: NoSchedule
+          key: codefresh.io
+          value: app
