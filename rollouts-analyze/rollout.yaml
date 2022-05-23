@@ -43,12 +43,15 @@ spec:
         app: argo-platform-api-events
         release: release-name
     spec:
-      imagePullSecrets:
-        - name: "release-name-registry"
+      # imagePullSecrets:
+      #   - name: "release-name-registry"
       containers:
         - name: api-events
-          image: ubuntu
+          image: quay.io/tamr/ubuntu
           imagePullPolicy: IfNotPresent
+          args:
+            - sleep
+            - infinity
           env:
             - name: ENV
               value: "production"
