@@ -47,11 +47,11 @@ spec:
       #   - name: "release-name-registry"
       containers:
         - name: api-events
-          image: quay.io/tamr/ubuntu
+          image: gcr.io/heptio-images/ks-guestbook-demo:0.1
           imagePullPolicy: IfNotPresent
-          args:
-            - sleep
-            - infinity
+          # args:
+          #   - sleep
+          #   - infinity
           env:
             - name: ENV
               value: "production"
