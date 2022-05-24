@@ -10,10 +10,10 @@ spec:
     interval: 10s
     count: 1
     failureLimit: 1
-    failureCondition: result.successRate < 0.95
-    successCondition: result.successRate >= 0.95
+    failureCondition: result.successRate > 0.051
+    successCondition: result.successRate <= 0.05
     provider:
       newRelic:
         profile: newrelic-v2  # optional, defaults to 'newrelic'
         query: |
-          FROM Transaction SELECT percentage(count(*), WHERE httpResponseCode != 500) as successRate where appName = 'api-events'
+          FROM Metric SELECT count(apm.service.error.count) / count(apm.service.transaction.duration) as 'Web errors'  WHERE (appName = 'api-events') AND (transactionType = 'Web') LIMIT MAX SINCE 1800 seconds AGO TIMESERIES
