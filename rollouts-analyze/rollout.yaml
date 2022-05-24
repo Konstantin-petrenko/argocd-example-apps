@@ -56,7 +56,7 @@ spec:
             - name: ENV
               value: "production"
             - name: VER
-              value: "14"
+              value: "15"
             - name: NEW_RELIC_APP_NAME
               value: "api-events"
             - name: RABBITMQ_URLS
