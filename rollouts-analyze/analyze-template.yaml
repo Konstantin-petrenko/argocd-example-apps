@@ -10,8 +10,8 @@ spec:
     interval: 10s
     count: 1
     failureLimit: 1
-    failureCondition: result.errorRate > 0.0051
-    successCondition: result.errorRate <= 0.005
+    failureCondition: result.errorRate > 0.00511
+    successCondition: result.errorRate <= 0.0051
     provider:
       newRelic:
         profile: newrelic-v2  # optional, defaults to 'newrelic'
