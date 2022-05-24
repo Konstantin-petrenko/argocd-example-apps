@@ -7,8 +7,9 @@ spec:
   # - name: application-name
   metrics:
   - name: success-rate
+    interval: 10s
     failureLimit: 3
-    failureCondition: result[0] >= 10
+    failureCondition: len(result) == 0 || result.successRate < 0.95
     successCondition: result.successRate >= 0.95
     provider:
       newRelic:
