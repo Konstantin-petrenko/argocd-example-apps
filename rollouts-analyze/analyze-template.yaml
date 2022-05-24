@@ -16,4 +16,4 @@ spec:
       newRelic:
         profile: newrelic-v2  # optional, defaults to 'newrelic'
         query: |
-          FROM Metric SELECT count(apm.service.error.count) / count(apm.service.transaction.duration) as errorRate  WHERE (appName = 'api-events') AND (transactionType = 'Web') LIMIT MAX SINCE 1800 seconds AGO TIMESERIES
+          SELECT count(apm.service.error.count) / count(apm.service.transaction.duration) as errorRate FROM Metric WHERE (appName = 'api-events') AND (transactionType = 'Web') 
