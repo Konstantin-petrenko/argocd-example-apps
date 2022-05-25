@@ -25,9 +25,9 @@ spec:
         - analysis:
             templates:
             - templateName: success-rate
-            # args:
-            # - name: application-name
-            #   value: 'api-events'
+            args:
+            - name: application-name
+              value: api-events
         - setWeight: 60
         - pause: {duration: 10s}
         - setWeight: 90
