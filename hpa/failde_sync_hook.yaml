@@ -1,73 +1,135 @@
-# apiVersion: batch/v1
-# kind: Job
-# metadata:
-#   name: clone-git-pre-sync-2
-#   annotations:
-#     argocd.argoproj.io/hook: PreSync
-#     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
-#     argocd.argoproj.io/sync-wave: "-1"
-# spec:
-#   template:
-#     spec:
-#       containers:
-#       - name: git-clone-2
-#         image: bitnami/git
-#         # command: [ "/bin/bash", "-c" , "sleep 3600" ]
-#         command: [ "/bin/bash" ]
-#         args:
-#           - "-c"
-#           - sleep 10000
-#         # env:
-#         #   - name: token
-#         #     valueFrom:
-#         #       secretKeyRef:
-#         #         name: github-token
-#         #         key: github-token
-#         volumeMounts:
-#           - name: clone-2
-#             mountPath: /tmp/clone
-#           # - name: git-repo-source
-#           #   mountPath: "/tmp/source"
-#       volumes:
-#       - name: clone-2
-#         configMap:
-#           name: clone-2
-#       # - name: git-repo-source
-#       #   persistentVolumeClaim:
-#       #     claimName: git-repo-source
-#       restartPolicy: Never
-#   backoffLimit: 1
-# ---
-# kind: ConfigMap
-# apiVersion: v1
-# metadata:
-#   name: clone-2
-#   annotations:
-#     argocd.argoproj.io/hook: PreSync
-#     argocd.argoproj.io/sync-wave: "-1"
-# data:
-#   clone.sh: |-
-#           # !/usr/bin/env bash
-#           set -o xtrace # uncomment it if you want deeper output
-#           set -o errexit
-#           set -o pipefail
-#           : '
-#           This script does : 1. get stable commit
-#                              2. pull and revert not stable commits if sync of argo applications is not succeded
-#                              3. push to git
-#           '
-#           cd /tmp/source
-#           rm -rf argocd-example-apps
-#           git clone https://"$token"@github.com/Konstantin-petrenko/argocd-example-apps.git
-#           ls -la
-#           cd argocd-example-apps
-#           echo we will take a stable commit to make a revert if we will get an error
-#           git show HEAD~1 | grep commit -m1 | awk '{print $2}' > /tmp/source/stable_commit
-#           cat /tmp/source/stable_commit
-#           # if [[ $(git show HEAD~1 | grep "revert to stable commit" -m1) ]]; then
-#           #     echo we are in lopp > /tmp/source/stable_commit
-#           # else
-#           #     echo we will take a stable commit to make a revert if we will get an error
-#           #     git show HEAD~1 | grep commit -m1 | awk '{print $2}' > /tmp/source/stable_commit
-#           #     cat /tmp/source/stable_commit
-#           # fi
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sync-fail-check-status-rollouts
+  annotations:
+    argocd.argoproj.io/hook: SyncFail
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      containers:
+      - name: sync-fail-check-status-rollouts
+        image: quay.io/codefresh/argocd-rollouts-git-kubectl:2.2_1.1_1.22
+        command: [ "/bin/bash" ]
+        args:
+          - "-c"
+          - /tmp/scripts/check.sh
+        env:
+          - name: token
+            valueFrom:
+              secretKeyRef:
+                name: argo-platform-argocd-hooks
+                key: github-token
+          - name: slack_token
+            valueFrom:
+              secretKeyRef:
+                name: argo-platform-argocd-hooks
+                key: slack-token
+          - name: slack_channel
+            valueFrom:
+              secretKeyRef:
+                name: argo-platform-argocd-hooks
+                key: slack-channel
+          - name: branch_name
+            valueFrom:
+              secretKeyRef:
+                name: argo-platform-argocd-hooks
+                key: branch-name
+        volumeMounts:
+          - name: sync-fail-check-status-rollouts
+            mountPath: /tmp/scripts
+      volumes:
+      - name: sync-fail-check-status-rollouts
+        configMap:
+          name: sync-fail-check-status-rollouts
+          defaultMode: 0555
+      restartPolicy: Never
+  backoffLimit: 0
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: sync-fail-check-status-rollouts
+  annotations:
+    argocd.argoproj.io/hook: SyncFail
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+data:
+  check.sh: |-
+          # !/usr/bin/env bash
+          #set -o xtrace # uncomment it if you want deeper output
+          set -o errexit
+          set -o pipefail
+          : '
+          This script does : 1. get stable commit and branch of argocd application
+                             2. pull and revert not stable commits if argorollouts is in Deagreded state
+                             3. revert git repo to stable commit
+          '
+                            # VARS
+          argocd_url=https://inc03.cf-op.com/argocd/applications/codefresh-v2-$branch_name?resource=
+          echo this is branch name $branch_name
+                            # SCRIPT
+
+          cd /tmp/
+          rm -rf codefresh-2.0-environment
+          git clone https://"$token"@github.com/Konstantin-petrenko/argocd-example-apps.git
+          cd argocd-example-apps
+          git pull
+          git config --global user.name "cf-ci-bot"
+          git config --global user.email cf-ci-bot@codefresh.com
+          git checkout $branch_name
+          #declare git variables
+          current_commit=$(git show HEAD | grep commit -m1 | awk '{print $2}')
+          revert_commit=$(git show $branch_name-revert-commit | grep commit -m1 | awk '{print $2}')
+          stable_commit=$(git show $branch_name-stable-commit | grep commit -m1 | awk '{print $2}')
+          echo this is stable commit $stable_commit
+
+          check_revert_loop () {
+            if [[ $current_commit == $revert_commit ]]; then
+              echo we are in lopp check application
+              slack_message="<!channel> we are in revert loop"
+              send_slack_notification "$slack_message"
+              exit 1
+            else
+              echo we are not in lopp
+            fi
+          }
+
+          send_slack_notification () {
+            curl -d "text=$1" \
+            -d "channel=$slack_channel" -H "Authorization: Bearer $slack_token" \
+            -d "username=Argo revert hook" \
+            -d "icon=https://argocd-notifications.readthedocs.io/en/stable/assets/logo.png" \
+            -X POST https://slack.com/api/chat.postMessage
+          }
+
+          update_revert_tag () {
+             slack_message="<!channel> updated revert_commit"
+             send_slack_notification "$slack_message"
+             # to update git tag
+             git tag -f $branch_name-revert-commit
+             git push origin -f $branch_name-revert-commit
+          }
+
+          check_revert_loop
+
+          if [[ $(kubectl-argo-rollouts list rollouts -n guestbook | grep Degraded) ]]; then
+             echo one of rollouts is in degreaded state roll back to stable version
+             git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+             git add .
+             git commit -m "revert to stable commit $stable_commit"
+             update_revert_tag
+             git push
+             #send notification to slack
+             degraded_argo_rollouts=$(kubectl-argo-rollouts list rollouts -n guestbook | grep Degraded )
+             slack_message="<!channel> This is Degraded rollouts take a look and fix them
+             $degraded_argo_rollouts.
+             check here $argocd_url"
+             send_slack_notification "$slack_message"
+          else
+             echo something is wrong with not rolluts please check
+             # when problem is not with rollouts
+             slack_message="<!channel> Something bad is not with rollouts check in argocd
+             $argocd_url."
+             send_slack_notification "$slack_message"
+          fi
