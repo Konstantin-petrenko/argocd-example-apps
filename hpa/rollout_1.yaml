@@ -27,7 +27,7 @@ spec:
           name: guestbook-ui-1
           env:
           - name: VERSION
-            value: '1'
+            value: '2'
           livenessProbe:
             tcpSocket:
               port: 80
