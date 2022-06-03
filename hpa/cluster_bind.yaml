@@ -1,14 +1,14 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: codefresh-list-rollouts
+  name: codefresh-argocd-hooks
   annotations:
     argocd.argoproj.io/hook: PreSync
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: hpa
+    namespace: guestbook
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: argo-rollots-view
+  name: argohooks-rollots-configmap-applications-view

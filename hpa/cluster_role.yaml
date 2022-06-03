@@ -1,25 +1,25 @@
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: argo-rollots-view
-  annotations:
-    argocd.argoproj.io/hook: PreSync
-rules:
-  - verbs:
-      - get
-      - list
-      - watch
-    apiGroups:
-      - argoproj.io
-    resources:
-      - rollouts
-      - applications
-  - verbs:
-      - get
-      - list
-      - watch
-      - patch
-    apiGroups:
-      - ''
-    resources:
-      - configmaps
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRole
+# metadata:
+#   name: argohooks-rollots-configmap-applications-view
+#   annotations:
+#     argocd.argoproj.io/hook: PreSync
+# rules:
+#   - verbs:
+#       - get
+#       - list
+#       - watch
+#     apiGroups:
+#       - argoproj.io
+#     resources:
+#       - rollouts
+#       - applications
+#   - verbs:
+#       - get
+#       - list
+#       - watch
+#       - patch
+#     apiGroups:
+#       - ''
+#     resources:
+#       - configmaps

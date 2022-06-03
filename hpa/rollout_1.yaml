@@ -1,0 +1,47 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: rollout-1
+spec:
+  progressDeadlineAbort: true
+  progressDeadlineSeconds: 500
+  revisionHistoryLimit: 4
+  replicas: 5
+  selector:
+    matchLabels:
+      app: guestbook-ui
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause:
+            duration: 10s
+  template:
+    metadata:
+      labels:
+        app: guestbook-ui
+    spec:
+      containers:
+        - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+          imagePullPolicy: IfNotPresent
+          name: guestbook-ui-1
+          env:
+          - name: VERSION
+            value: '1'
+          livenessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 80
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 200m
+              memory: 200Mi

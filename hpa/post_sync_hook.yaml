@@ -1,0 +1,170 @@
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: post-sync-check-status-rollouts
+#   annotations:
+#     argocd.argoproj.io/hook: PostSync
+#     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: post-sync-check-status-rollouts
+#         image: quay.io/codefresh/argocd-rollouts-git-kubectl:2.2_1.1_1.22
+#         command: [ "/bin/bash" ]
+#         args:
+#           - "-c"
+#           - /tmp/scripts/check.sh 2
+#         env:
+#           - name: token
+#             valueFrom:
+#               secretKeyRef:
+#                 name: argo-platform-argocd-hooks
+#                 key: github-token
+#           # - name: slack_token
+#           #   valueFrom:
+#           #     secretKeyRef:
+#           #       name: argo-platform-argocd-hooks
+#           #       key: slack-token
+#           # - name: slack_channel
+#           #   valueFrom:
+#           #     secretKeyRef:
+#           #       name: argo-platform-argocd-hooks
+#           #       key: slack-channel
+#           - name: branch_name
+#             valueFrom:
+#               secretKeyRef:
+#                 name: argo-platform-argocd-hooks
+#                 key: branch-name
+#           # - name: argocd_token
+#           #   valueFrom:
+#           #     secretKeyRef:
+#           #       name: argo-platform-argocd-hooks
+#           #       key: inc03-token
+#         volumeMounts:
+#           - name: post-sync-check-status-rollouts
+#             mountPath: /tmp/scripts
+#       volumes:
+#       - name: post-sync-check-status-rollouts
+#         configMap:
+#           name: post-sync-check-status-rollouts
+#           defaultMode: 0555
+#       restartPolicy: Never
+#   backoffLimit: 0
+# ---
+# kind: ConfigMap
+# apiVersion: v1
+# metadata:
+#   name: post-sync-check-status-rollouts
+#   annotations:
+#     argocd.argoproj.io/hook: PostSync
+#     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+# data:
+#   check.sh: |-
+#           # !/usr/bin/env bash
+#           #set -o xtrace # uncomment it if you want deeper output
+#           #set -o errexit
+#           set -o pipefail
+#           : '
+#           This script does : 1. get stable commit and branch of argocd application
+#                              2. pull and revert not stable commits if argorollouts is in Deagreded state or Progressing for more than 5 minutes
+#                              3. revert git repo to stable commit
+#                              4. send notification to slack channel
+#           '
+#                             # PARAMETRS
+#           time_wait_limit=${1:-"5"}
+#                             # VARS
+#           runtime="$time_wait_limit minute"
+#           endtime=$(date -ud "$runtime" +%s)
+#           argocd_url=https://inc03.cf-op.com/argocd/applications/codefresh-v2-$branch_name?resource=
+#           argocd_server=inc03.cf-op.com:80
+#           echo this is argocd url $argocd_url
+#           echo this is branch name $branch_name
+#                             # SCRIPT
+
+#           cd /tmp/
+#           rm -rf codefresh-2.0-environment
+#           git clone https://"$token"@github.com/codefresh-io/codefresh-2.0-environment.git
+#           cd codefresh-2.0-environment
+#           git pull
+#           git config --global user.name "cf-ci-bot"
+#           git config --global user.email cf-ci-bot@codefresh.com
+#           git checkout $branch_name
+#           #declare git variables
+#           current_commit=$(git show HEAD | grep commit -m1 | awk '{print $2}')
+#           revert_commit=$(git show $branch_name-revert-commit | grep commit -m1 | awk '{print $2}')
+#           stable_commit=$(git show $branch_name-stable-commit | grep commit -m1 | awk '{print $2}')
+#           echo this is stable commit $stable_commit
+
+#           check_revert_loop () {
+#             if [[ $current_commit == $revert_commit ]]; then
+#               echo we are in lopp check application
+#               slack_message="<!channel> we are in revert loop"
+#               send_slack_notification "$slack_message"
+#               exit 1
+#             else
+#               echo we are not in lopp
+#             fi
+#           }
+
+#           send_slack_notification () {
+#             curl -d "text=$1" \
+#             -d "channel=$slack_channel" -H "Authorization: Bearer $slack_token" \
+#             -d "username=Argo revert hook" \
+#             -d "icon=https://argocd-notifications.readthedocs.io/en/stable/assets/logo.png" \
+#             -X POST https://slack.com/api/chat.postMessage
+#           }
+
+#           update_revert_tag () {
+#              slack_message="<!channel> updated revert_commit"
+#              send_slack_notification "$slack_message"
+#              # to update git tag
+#              git tag -f $branch_name-revert-commit
+#              git push origin -f $branch_name-revert-commit
+#           }
+
+#           get_status () {
+#             if [[ $branch_name == staging ]]; then
+#               app_status=$(kubectl get application codefresh-v2 -n control-plane-staging | grep -o Healthy)
+#             else
+#               app_status=$(argocd app get codefresh-v2-$branch_name --server $argocd_server --plaintext --grpc-web-root-path /argocd --auth-token $argocd_token  --insecure | grep "Health Status" -m1 | awk '{print $3}')
+#             fi
+#             echo $app_status
+#           }
+
+#           while true
+#           do
+#               if [[ $(get_status) == Healthy ]]; then
+#                   echo everything is ok we will update stable git tag
+#                   git tag -f $branch_name-stable-commit
+#                   git push origin -f $branch_name-stable-commit
+#                   break
+#               elif [[ $(date -u +%s) -gt $endtime ]]; then
+#                  if [[ $(kubectl-argo-rollouts list rollouts -n codefresh-v2 | grep Degraded ) ]]; then
+#                     echo "rollout is starting more then $time_wait_limit minutes we will check revert loop"
+#                     check_revert_loop
+#                     echo "rollout is starting more then $time_wait_limit minutes we will make a revert of repo"
+#                     git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+#                     git add .
+#                     git commit -m "revert to stable commit $stable_commit"
+#                     update_revert_tag
+#                     git push
+#                     # sned notification to slack
+#                     degraded_argo_rollouts=$(kubectl-argo-rollouts list rollouts -n codefresh-v2 | grep Degraded )
+#                     slack_message="<!channel> This is Degraded rollouts take a look and fix them
+#                     $degraded_argo_rollouts.
+#                     check here $argocd_url"
+#                     send_slack_notification "$slack_message"
+#                     break
+#                  else
+#                     echo somenthign is bad with not rollouts
+#                     slack_message="<!channel> Something bad is not with rollouts check in argocd
+#                     $argocd_url."
+#                     send_slack_notification "$slack_message"
+#                     break
+#                  fi
+#                  break
+#                elif [[ $(kubectl-argo-rollouts list rollouts -n codefresh-v2 | grep Progressing ) || $(kubectl-argo-rollouts list rollouts -n codefresh-v2 | grep Degraded) ]]; then
+#                  echo "rollout is in degreaded state or some other resource we will wait till timeout"
+#               fi
+#           done
