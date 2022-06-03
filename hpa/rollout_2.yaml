@@ -4,7 +4,7 @@ metadata:
   name: rollout-2
 spec:
   progressDeadlineAbort: true
-  progressDeadlineSeconds: 500
+  progressDeadlineSeconds: 80
   revisionHistoryLimit: 4
   replicas: 5
   selector:

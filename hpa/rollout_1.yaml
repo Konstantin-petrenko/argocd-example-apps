@@ -4,7 +4,7 @@ metadata:
   name: rollout-1
 spec:
   progressDeadlineAbort: true
-  progressDeadlineSeconds: 500
+  progressDeadlineSeconds: 80
   revisionHistoryLimit: 4
   replicas: 5
   selector:
@@ -22,7 +22,7 @@ spec:
         app: guestbook-ui
     spec:
       containers:
-        - image: gcr.io/heptio-images/ks-guestbook-demo:0.2asd
+        - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
           imagePullPolicy: IfNotPresent
           name: guestbook-ui-1
           env:
