@@ -4,7 +4,11 @@ metadata:
   name: {{ template "helm-guestbook.fullname" . }}
   labels:
 {{- if .Capabilities.APIVersions.Has "kubernetes-client.io/v1/ExternalSecret" }}
-    test: {{ template "helm-guestbook.name" . }}
+{{- if index .Values "k8s" "version" }}
+    test: 1.22
+{{- else }}
+    test: 1.23
+{{ end }}    
 {{- else }}  
     test: notworking
 {{ end }}
