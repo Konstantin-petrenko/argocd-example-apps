@@ -11,7 +11,7 @@ metadata:
 {{- end }}    
 {{- else }}  
     test: notworking
-{{ end }}
+{{- end }}
     app: {{ template "helm-guestbook.name" . }}
     chart: {{ template "helm-guestbook.chart" . }}
     release: {{ .Release.Name }}
