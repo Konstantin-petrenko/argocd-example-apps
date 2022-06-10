@@ -5,6 +5,8 @@ metadata:
   labels:
 {{- if .Capabilities.APIVersions.Has "kubernetes-client.io/v1/ExternalSecret" }}
     test: {{ template "helm-guestbook.name" . }}
+{{- else }}  
+    test: notworking
 {{ end }}
     app: {{ template "helm-guestbook.name" . }}
     chart: {{ template "helm-guestbook.chart" . }}
