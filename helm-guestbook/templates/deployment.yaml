@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: {{ template "helm-guestbook.fullname" . }}
   labels:
+{{- if .Capabilities.APIVersions.Has "kubernetes-client.io/v1/ExternalSecret" }}
+    test: {{ template "helm-guestbook.name" . }}
+{{ end }}
     app: {{ template "helm-guestbook.name" . }}
     chart: {{ template "helm-guestbook.chart" . }}
     release: {{ .Release.Name }}
