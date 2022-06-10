@@ -5,9 +5,9 @@ metadata:
   labels:
 {{- if .Capabilities.APIVersions.Has "kubernetes-client.io/v1/ExternalSecret" }}
 {{- if index .Values "k8ssecretmigration"  }}
-    test: 1.21
+    test: "1.21"
 {{- else }}
-    test: 1.22
+    test: "1.22"
 {{- end }}    
 {{- else }}  
     test: notworking
