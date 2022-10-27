@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: roll-ui-2
+  name: roll-ui-1
 spec:
   progressDeadlineAbort: true
   progressDeadlineSeconds: 40

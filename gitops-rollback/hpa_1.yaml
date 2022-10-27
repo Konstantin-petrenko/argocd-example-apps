@@ -1,14 +1,15 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: hpa-rol-2
+  name: hpa-rol-1
 spec:
   maxReplicas: 10
   minReplicas: 5
   scaleTargetRef:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
-    name: roll-ui-2
+    name: roll-ui-1
+  # targetCPUUtilizationPercentage: 80
   metrics:
     - type: Resource
       resource:
