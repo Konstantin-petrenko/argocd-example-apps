@@ -6,7 +6,6 @@ spec:
   progressDeadlineAbort: true
   progressDeadlineSeconds: 40
   minReadySeconds: 10
-
   replicas: 2
   revisionHistoryLimit: 3
   selector:

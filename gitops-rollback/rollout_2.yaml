@@ -6,16 +6,15 @@ spec:
   progressDeadlineAbort: true
   progressDeadlineSeconds: 40
   minReadySeconds: 10
-
   replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: guestbook-ui
+      app: gitops-rollback
   template:
     metadata:
       labels:
-        app: guestbook-ui
+        app: gitops-rollback
     spec:
       containers:
       - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
