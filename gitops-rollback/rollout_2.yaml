@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: deployment-ui-2
+spec:
+  progressDeadlineAbort: true
+  progressDeadlineSeconds: 70
+  minReadySeconds: 10
+  workloadRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ui-2
+  revisionHistoryLimit: 3
+  strategy:
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {duration: 10s}

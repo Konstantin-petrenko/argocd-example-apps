@@ -1,0 +1,89 @@
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: revert
+#   namespace: guestbook
+#   annotations:
+#     argocd.argoproj.io/hook: SyncFail
+#     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: revert
+#         # image: bitnami/git
+#         image: kpetrenko/codefresh:git-argo-rollouts
+#         command: [ "/bin/bash" ]
+#         args:
+#           - "-c"
+#           - bash /tmp/scripts/revert.sh
+#         env:
+#           - name: token
+#             valueFrom:
+#               secretKeyRef:
+#                 name: github-token
+#                 key: github-token
+#         volumeMounts:
+#           - name: git-repo-source
+#             mountPath: "/tmp/source"
+#           - name: revert
+#             mountPath: /tmp/scripts
+#       volumes:
+#       - name: git-repo-source
+#         persistentVolumeClaim:
+#           claimName: git-repo-source
+#       - name: revert
+#         configMap:
+#           name: revert
+#       restartPolicy: Never
+#   backoffLimit: 1
+# ---
+# kind: ConfigMap
+# apiVersion: v1
+# metadata:
+#   name: revert
+#   namespace: guestbook
+# data:
+#   revert.sh: |-
+#           # !/usr/bin/env bash
+#           set -o xtrace # uncomment it if you want deeper output
+#           set -o errexit
+#           set -o pipefail
+#           : '
+#           This script does : 1. get stable commit
+#                              2. pull and revert not stable commits if sync of argo applications is not succeded
+#                              3. push to git
+#           '
+#           if [[ $(kubectl-argo-rollouts list rollouts -n guestbook | grep Degraded) ]]; then
+#             echo one of rollouts is in degreaded state roll back to stable version
+#              cd /tmp/source/argocd-example-apps
+#              git pull
+#              git config --global user.name "auto revert"
+#              git config --global user.email autorevert@example.com
+#              export stable_commit=$(cat /tmp/source/stable_commit)
+#              git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+#              git add .
+#              git commit -m "revert to stable commit $stable_commit"
+#              git push
+#           else
+#              echo something is wrong with not rolluts please check
+#           fi
+
+
+
+
+# # git revert 33be7ee8659789333902173be1584706de1f280f..HEAD --strategy=recursive --strategy-option=theirs -n
+
+
+# #2
+# # cd argocd-example-apps
+# #
+# # stable_commit=$(git show HEAD~1 | grep commit | awk '{print $2}')
+# # echo $stable_commit
+# #
+# # git pull
+# #
+# # git revert $stable_commit..HEAD --strategy=recursive --strategy-option=theirs -n
+# # git add .
+# # git commit -m "revert to stablle commit $stable_commit"
+# # git push
